@@ -1,3 +1,6 @@
 from django.shortcuts import render
+from .models import ItemInventario
 
-# Create your views here.
+def listar_itens(request):
+    itens = ItemInventario.objects.all()
+    return render(request, 'inventario/lista.html', {'itens': itens})

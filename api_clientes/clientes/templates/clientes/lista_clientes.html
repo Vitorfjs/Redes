@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Clientes</title>
+</head>
+<body>
+    <h2>Lista de Clientes</h2>
+    <ul>
+        {% for cliente in clientes %}
+            <li>
+                {{ cliente.nome }} - {{ cliente.email }}
+                <a href="{% url 'editar_cliente' cliente.pk %}">Editar</a>
+                <a href="{% url 'excluir_cliente' cliente.pk %}">Excluir</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'criar_cliente' %}">Adicionar novo cliente</a>
+</body>
+</html>
