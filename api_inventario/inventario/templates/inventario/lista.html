@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Itens</title>
+</head>
+<body>
+  <h1>Lista de Itens do Inventário</h1>
+  <ul> 
+      {% for item in itens %}
+	  <li>{{ item.nome }} - Quantidade: {{ item.quantidade  }} - Descrição: {{ item.descricao  }}</li>
+      {% empty  %}
+	  <li>Nenhum item encontrado.</li>
+      {% endfor  %}
+  </ul>
+</body>
+</html>
