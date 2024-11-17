@@ -1,6 +1,10 @@
-from django.urls import path
-from . import views
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import InventoryItemViewSet, SupplierViewSet
 
+router = DefaultRouter()
+router.register(r'items', InventoryItemViewSet)
+router.register(r'suppliers', SupplierViewSet)
 urlpatterns = [
-    path('itens/', views.listar_itens, name='listar_itens'),
+    path('', include(router.urls)),
 ]

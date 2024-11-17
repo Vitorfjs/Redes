@@ -1,8 +1,9 @@
-from rest_framework import generics
-from .models import Relatorio
-from .serializers import RelatorioSerializer
+from rest_framework import viewsets
+from .models import Feedback
+from .serializers import FeedbackSerializer
 
-class RelatorioListCreate(generics.ListCreateAPIView):
-    queryset = Relatorio.objects.all()
-    serializer_class = RelatorioSerializer
+class FeedbackViewSet(viewsets.ModelViewSet):
+    queryset = Feedback.objects.all()
+    serializer_class = FeedbackSerializer
+
 
