@@ -1,20 +1,30 @@
 # Usando uma imagem base do Python
-FROM python:3.9-slim
+FROM python:3.10-slim
+
+# Instalando dependências do sistema necessárias para compilar mariadb
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libssl-dev \
+    mariadb-client \
+    pkg-config \
+    libmariadb-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 # Definindo o diretório de trabalho
 WORKDIR /app
 
-# Copiando o arquivo de dependências
-COPY requirements.txt .
+# Copiar o arquivo requirements.txt
+COPY requirements.txt /app/
 
-# Instalando dependências
-RUN pip install -r requirements.txt
+# Instalando as dependências do python
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copiando o código da aplicação
-COPY . .
+COPY . /app/
 
 # Expondo a porta da API
 EXPOSE 8001
 
 # Comando para rodar o servidor
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8001"]
+
