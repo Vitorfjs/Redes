@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,7 +26,7 @@ SECRET_KEY = 'django-insecure-w_*f@2zw0_464#^d7ehl7t8p#=h@#7i@t_@q!)*ch2%+yg#ukw
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.10.10.30']
+ALLOWED_HOSTS = ['api_relatorios.local', 'localhost', '127.0.0.1', 'api_relatorios.local:8002']
 
 
 # Application definition
@@ -81,7 +82,7 @@ DATABASES = {
         'NAME': 'relatorios_db',
 	'USER': 'relatorios_user',
 	'PASSWORD': 'relatoriosdb',
-	'HOST': 'localhost',
+	'HOST': os.getenv('DATABASE_HOST', 'db_relatorios'),
 	'PORT': '3306',
     }
 }

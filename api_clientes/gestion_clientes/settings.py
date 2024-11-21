@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-lg3@fe)5&%-d(qoc%5kgo97(b50#8c5a095l7bfd5$dg!$7&np
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.10.10.10']
+ALLOWED_HOSTS = ['api_clientes.local','localhost', '127.0.0.1', 'api_clientes.local:8000']
 
 
 # Application definition
@@ -80,7 +80,7 @@ DATABASES = {
         'NAME': 'clientes_db',
 	'USER': 'clientes_user',
 	'PASSWORD': 'clientesdb',
-	'HOST': 'localhost',
+	'HOST': os.getenv('DATABASE_HOST', 'db_clientes'),
 	'PORT': '3306',
     }
 }

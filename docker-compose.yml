@@ -1,0 +1,141 @@
+version: "3.8"
+
+services:
+  # API Clientes
+  api_clientes:
+    build:
+      context: ./api_clientes  # Caminho para o diretório da API
+    container_name: api_clientes
+    networks:
+      - api_network
+      - db_network
+    volumes:
+      - ./api_clientes:/app
+      - ./wait-for-it.sh:/usr/local/bin/wait-for-it.sh
+    ports:
+      - "8000:8000"  # A API de clientes estará disponível na porta 8000
+    command: /usr/local/bin/wait-for-it.sh db_clientes:3306 -- python manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - db_clientes
+    environment:
+      - DATABASE_HOST=db_clientes
+
+  # API Inventário
+  api_inventario:
+    build:
+      context: ./api_inventario  # Caminho para o diretório da API
+    container_name: api_inventario
+    networks:
+      - api_network
+      - db_network
+    volumes:
+      - ./api_inventario:/app
+      - ./wait-for-it.sh:/usr/local/bin/wait-for-it.sh
+    ports:
+      - "8001:8000"  # A API de inventário estará disponível na porta 8001
+    command: /usr/local/bin/wait-for-it.sh db_inventario:3306 -- python manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - db_inventario
+    environment:
+      - DATABASE_HOST=db_inventario
+
+  # API Relatórios
+  api_relatorios:
+    build:
+      context: ./api_relatorios  # Caminho para o diretório da API
+    container_name: api_relatorios
+    networks:
+      - api_network
+      - db_network
+    volumes:
+      - ./api_relatorios:/app
+      - ./wait-for-it.sh:/usr/local/bin/wait-for-it.sh
+    ports:
+      - "8002:8000"  # A API de relatórios estará disponível na porta 8002
+    command: /usr/local/bin/wait-for-it.sh db_relatorios:3306 -- python manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - db_relatorios
+    environment:
+      - DATABASE_HOST=db_relatorios
+
+  # Banco de dados para Clientes
+  db_clientes:
+    image: mariadb:latest
+    container_name: db_clientes
+    networks:
+      - db_network
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: clientes_db
+      MYSQL_USER: clientes_user
+      MYSQL_PASSWORD: clientesdb
+    volumes:
+      - db_clientes_data:/var/lib/mysql
+
+  # Banco de dados para Inventário
+  db_inventario:
+    image: mariadb:latest
+    container_name: db_inventario
+    networks:
+      - db_network
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: inventario_db
+      MYSQL_USER: inventario_user
+      MYSQL_PASSWORD: inventariodb
+    volumes:
+      - db_inventario_data:/var/lib/mysql
+
+  # Banco de dados para Relatórios
+  db_relatorios:
+    image: mariadb:latest
+    container_name: db_relatorios
+    networks:
+      - db_network
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: relatorios_db
+      MYSQL_USER: relatorios_user
+      MYSQL_PASSWORD: relatoriosdb
+    volumes:
+      - db_relatorios_data:/var/lib/mysql
+
+  # Proxy reverso (Nginx)
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    networks:
+      - api_network
+    volumes:
+      - ./nginx:/etc/nginx
+    ports:
+      - "8080:80"
+    depends_on:
+      - api_clientes
+      - api_inventario
+      - api_relatorios
+
+# Redes e sub-redes
+networks:
+  api_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "10.10.10.0/25"
+          gateway: "10.10.10.1"
+  db_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "10.10.10.128/25"
+          gateway: "10.10.10.129"
+
+# Volumes
+volumes:
+  db_clientes_data:
+  db_inventario_data:
+  db_relatorios_data:
+
+
+
+

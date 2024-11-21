@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,7 +26,7 @@ SECRET_KEY = 'django-insecure-=!)ir1f-b*jgz5^lvw2&dyxaht*or&hx6wf8@xn91)86!7u^i-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.10.10.20']
+ALLOWED_HOSTS = ['api_inventario.local', 'localhost', '127.0.0.1', 'api_inventario.local:8001']
 
 
 # Application definition
@@ -81,7 +82,7 @@ DATABASES = {
         'NAME': 'inventario_db',
 	'USER': 'inventario_user',
 	'PASSWORD': 'inventariodb',
-	'HOST': 'localhost',
+	'HOST': os.getenv('DATABASE_HOST', 'db_inventario'),
 	'PORT': '3306',
     }
 }
