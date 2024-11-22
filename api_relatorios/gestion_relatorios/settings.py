@@ -26,8 +26,8 @@ SECRET_KEY = 'django-insecure-w_*f@2zw0_464#^d7ehl7t8p#=h@#7i@t_@q!)*ch2%+yg#ukw
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['api_relatorios.local', 'localhost', '127.0.0.1', 'api_relatorios.local:8002']
-
+ALLOWED_HOSTS = ['*']
+# 'apirelatorios.local', 'localhost', '127.0.0.1', 'apirelatorios', '0.0.0.0'
 
 # Application definition
 

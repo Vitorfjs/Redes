@@ -2,10 +2,10 @@ version: "3.8"
 
 services:
   # API Clientes
-  api_clientes:
+  apiclientes:
     build:
       context: ./api_clientes  # Caminho para o diretório da API
-    container_name: api_clientes
+    container_name: apiclientes
     networks:
       - api_network
       - db_network
@@ -19,12 +19,13 @@ services:
       - db_clientes
     environment:
       - DATABASE_HOST=db_clientes
+      - PORT=8000
 
   # API Inventário
-  api_inventario:
+  apiinventario:
     build:
       context: ./api_inventario  # Caminho para o diretório da API
-    container_name: api_inventario
+    container_name: apiinventario
     networks:
       - api_network
       - db_network
@@ -32,18 +33,19 @@ services:
       - ./api_inventario:/app
       - ./wait-for-it.sh:/usr/local/bin/wait-for-it.sh
     ports:
-      - "8001:8000"  # A API de inventário estará disponível na porta 8001
-    command: /usr/local/bin/wait-for-it.sh db_inventario:3306 -- python manage.py runserver 0.0.0.0:8000
+      - "8001:8001"  # A API de inventário estará disponível na porta 8001
+    command: /usr/local/bin/wait-for-it.sh db_inventario:3306 -- python manage.py runserver 0.0.0.0:8001
     depends_on:
       - db_inventario
     environment:
       - DATABASE_HOST=db_inventario
+      - PORT=8001
 
   # API Relatórios
-  api_relatorios:
+  apirelatorios:
     build:
       context: ./api_relatorios  # Caminho para o diretório da API
-    container_name: api_relatorios
+    container_name: apirelatorios
     networks:
       - api_network
       - db_network
@@ -51,12 +53,13 @@ services:
       - ./api_relatorios:/app
       - ./wait-for-it.sh:/usr/local/bin/wait-for-it.sh
     ports:
-      - "8002:8000"  # A API de relatórios estará disponível na porta 8002
-    command: /usr/local/bin/wait-for-it.sh db_relatorios:3306 -- python manage.py runserver 0.0.0.0:8000
+      - "8002:8002"  # A API de relatórios estará disponível na porta 8002
+    command: /usr/local/bin/wait-for-it.sh db_relatorios:3306 -- python manage.py runserver 0.0.0.0:8002
     depends_on:
       - db_relatorios
     environment:
       - DATABASE_HOST=db_relatorios
+      - PORT=8002
 
   # Banco de dados para Clientes
   db_clientes:
@@ -107,13 +110,13 @@ services:
     networks:
       - api_network
     volumes:
-      - ./nginx:/etc/nginx
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
     ports:
       - "8080:80"
     depends_on:
-      - api_clientes
-      - api_inventario
-      - api_relatorios
+      - apiclientes
+      - apiinventario
+      - apirelatorios
 
 # Redes e sub-redes
 networks:

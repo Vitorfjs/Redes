@@ -26,8 +26,8 @@ SECRET_KEY = 'django-insecure-=!)ir1f-b*jgz5^lvw2&dyxaht*or&hx6wf8@xn91)86!7u^i-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['api_inventario.local', 'localhost', '127.0.0.1', 'api_inventario.local:8001']
-
+ALLOWED_HOSTS = ['*']
+# 'apiinventario.local', 'localhost', '127.0.0.1', 'apiinventario', '0.0.0.0'
 
 # Application definition
 
