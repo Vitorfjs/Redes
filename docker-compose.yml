@@ -91,8 +91,65 @@ services:
       - api_relatorios
 
 networks:
-  app_network:
+  api_clientes_network:
     driver: bridge
-    ipam: 
+    ipam:
       config:
-        - subnet: 10.10.10.0/24
+        - subnet: 10.10.10.0/28
+          gateway: 10.10.10.1
+
+  api_inventario_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.10.16/28
+          gateway: 10.10.10.17
+
+  api_relatorios_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.10.32/28
+          gateway: 10.10.10.33
+
+  db_clientes_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.10.48/28
+          gateway: 10.10.10.49
+
+  db_inventario_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.10.64/28
+          gateway: 10.10.10.65
+
+  db_relatorios_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.10.80/28
+          gateway: 10.10.10.81
+
+  db_backup_clientes_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.10.96/28
+          gateway: 10.10.10.97
+
+  db_backup_inventario_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.10.112/28
+          gateway: 10.10.10.113
+
+  proxy_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.10.128/28
+          gateway: 10.10.10.129
