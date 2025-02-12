@@ -81,7 +81,7 @@ DATABASES = {
         'NAME': 'relatorios_db',
 	'USER': 'relatorios_user',
 	'PASSWORD': 'relatoriosdb',
-	'HOST': 'localhost',
+	'HOST': 'db_relatorios',
 	'PORT': '3306',
     }
 }

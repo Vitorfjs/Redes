@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
     mariadb-client \
     pkg-config \
-    libmariadb-dev \
+    default-libmysqlclient-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Definindo o diretório de trabalho

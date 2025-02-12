@@ -80,7 +80,7 @@ DATABASES = {
         'NAME': 'clientes_db',
 	'USER': 'clientes_user',
 	'PASSWORD': 'clientesdb',
-	'HOST': 'localhost',
+	'HOST': 'db_clientes',
 	'PORT': '3306',
     }
 }
