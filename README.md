@@ -1,23 +1,35 @@
-# Projeto APIs Independentes
+# 🚀 Projeto APIs Independentes com Docker e Nginx Reverse‑Proxy
 
-Este projeto contém três APIs independentes desenvolvidas para diferentes propósitos. Cada API está conectada a um banco de dados específico e foi configurada para operar em um bloco de IP privado `10.10.10.0/24`, garantindo isolamento e segurança na rede.
+Este repositório orquestra três micro‑serviços REST independentes, cada um em seu próprio container Docker, com bancos de dados MariaDB isolados, phpMyAdmin para administração, containers de backup e um Nginx funcionando como proxy reverso. Tudo isso em redes Docker privadas (10.10.10.0/24) para garantir segurança, isolamento e escalabilidade.
 
-## Estrutura do Projeto
+---
 
-- **API Clientes**: API responsável pelo gerenciamento dos clientes da empresa.
-- **API Inventário**: API para controle e monitoramento dos itens em estoque.
-- **API Relatórios**: API que gera relatórios com base nos dados de clientes e inventário.
+## 📂 Estrutura do Repositório
 
-## Tecnologias Utilizadas
+| Caminho              | Descrição                                           |
+| -------------------- | --------------------------------------------------- |
+| `api-clientes/`      | Código da API Clientes (Django com Templates)       |
+| `api-inventario/`    | Código da API Inventário (Django REST)              |
+| `api-relatorios/`    | Código da API Relatórios (Django REST)              |
+| `nginx/nginx.conf`   | Configuração do Nginx reverse‑proxy                 |
+| `docker-compose.yml` | Orquestra todos os containers e redes               |
+| `requirements.txt`   | Dependências necessárias para o projeto             |
+| `wait-for-it.sh`     | Script shell para correta inicialização dos Dockers |
+| `README.md`          | Documentação e instruções de uso                    |
 
-- Python
-- Django e Django REST Framework
-- MySQL (para os bancos de dados)
-- Docker (opcional, para containerização)
+## 🛠 Tecnologias
+
+- **Linguagem & Framework**: Python, Django, Django REST Framework  
+- **Banco de Dados**: MariaDB (cada API com seu próprio schema)  
+- **Admin DB**: phpMyAdmin  
+- **Containerização**: Docker & Docker Compose  
+- **Proxy Reverso**: Nginx  
+- **Rede Privada Docker**: 10.10.10.0/24  
   
-## Configuração do Projeto
+## 🚀 Como Executar
 
-1. Clone este repositório.
-2. Instale as dependências para cada API:
+1. **Clone o repositório**  
    ```bash
-   pip install -r requirements.txt
+   git clone https://github.com/Vitorfjs/Redes
+   ```
+2. 
