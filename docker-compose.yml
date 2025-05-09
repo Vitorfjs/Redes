@@ -1,0 +1,250 @@
+version: '3.8'
+
+services:
+  db_clientes:
+    image: mariadb:latest
+    container_name: db_clientes
+    networks:
+      db_clientes_network:
+        ipv4_address: 10.10.10.50
+      db_backup_clientes_network:
+        ipv4_address: 10.10.10.99
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: clientes_db
+    volumes:
+      - db_clientes_data:/var/lib/mysql
+
+  db_inventario:
+    image: mariadb:latest
+    container_name: db_inventario
+    networks:
+      db_inventario_network:
+        ipv4_address: 10.10.10.68
+      db_backup_inventario_network:
+        ipv4_address: 10.10.10.118
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: inventario_db
+    volumes:
+      - db_inventario_data:/var/lib/mysql
+
+  db_relatorios:
+    image: mariadb:latest
+    container_name: db_relatorios
+    networks:
+      db_relatorios_network:
+        ipv4_address: 10.10.10.85
+      db_backup_relatorios_network:
+        ipv4_address: 10.10.10.132
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: relatorios_db
+    volumes:
+      - db_relatorios_data:/var/lib/mysql
+
+
+  api_clientes:
+    build:
+      context: ./api_clientes
+      dockerfile: Dockerfile
+    container_name: api_clientes
+    ports:
+      - "8000:8000"
+    command: /bin/sh -c "/usr/local/bin/wait-for-it.sh db_clientes:3306 -- python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./wait-for-it.sh:/usr/local/bin/wait-for-it.sh
+    networks:
+      api_clientes_network:
+        ipv4_address: 10.10.10.5
+      db_clientes_network:
+        ipv4_address: 10.10.10.52
+    depends_on:
+      - db_clientes
+
+  api_inventario:
+    build:
+      context: ./api_inventario
+      dockerfile: Dockerfile
+    container_name: api_inventario
+    ports:
+      - "8001:8001"
+    command: /bin/sh -c "/usr/local/bin/wait-for-it.sh db_inventario:3306 -- python manage.py runserver 0.0.0.0:8001"
+    volumes:
+      - ./wait-for-it.sh:/usr/local/bin/wait-for-it.sh
+    networks:
+      api_inventario_network:
+        ipv4_address: 10.10.10.20
+      db_inventario_network:
+        ipv4_address: 10.10.10.67
+    depends_on:
+      - db_inventario
+
+  api_relatorios:
+    build:
+      context: ./api_relatorios
+      dockerfile: Dockerfile
+    container_name: api_relatorios
+    ports:
+      - "8002:8002"
+    command: /bin/sh -c "/usr/local/bin/wait-for-it.sh db_relatorios:3306 -- python manage.py runserver 0.0.0.0:8002"
+    volumes:
+      - ./wait-for-it.sh:/usr/local/bin/wait-for-it.sh
+    networks:
+      api_relatorios_network:
+        ipv4_address: 10.10.10.35
+      db_relatorios_network:
+        ipv4_address: 10.10.10.84
+    depends_on:
+      - db_relatorios
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin
+    networks:
+      db_clientes_network:
+        ipv4_address: 10.10.10.59
+      db_inventario_network:
+        ipv4_address: 10.10.10.71
+      db_relatorios_network:
+        ipv4_address: 10.10.10.89
+    environment:
+      PMA_HOSTS: "db_clientes, db_inventario, db_relatorios"
+      PMA_USER: root
+      PMA_PASSWORD: root
+    ports:
+      - "8081:80"
+
+  db_backup_clientes:
+    image: mariadb:latest
+    container_name: db_backup_clientes
+    networks:
+      db_backup_clientes_network:
+        ipv4_address: 10.10.10.100
+      db_clientes_network:
+        ipv4_address: 10.10.10.53
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+
+  db_backup_inventario:
+    image: mariadb:latest
+    container_name: db_backup_inventario
+    networks:
+      db_backup_inventario_network:
+        ipv4_address: 10.10.10.115
+      db_inventario_network:
+        ipv4_address: 10.10.10.70
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+
+  db_backup_relatorios:
+    image: mariadb:latest
+    container_name: db_backup_relatorios
+    networks:
+      db_backup_relatorios_network:
+        ipv4_address: 10.10.10.135
+      db_relatorios_network:
+        ipv4_address: 10.10.10.86
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx_proxy
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "8082:80"
+    networks:
+      proxy_network:
+        ipv4_address: 10.10.10.156
+      api_clientes_network:
+        ipv4_address: 10.10.10.13
+      api_inventario_network:
+        ipv4_address: 10.10.10.28
+      api_relatorios_network:
+        ipv4_address: 10.10.10.44
+    depends_on:
+      - api_clientes
+      - api_inventario
+      - api_relatorios
+
+networks:
+  api_clientes_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.10.0/28
+          gateway: 10.10.10.1
+
+  api_inventario_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.10.16/28
+          gateway: 10.10.10.17
+
+  api_relatorios_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.10.32/28
+          gateway: 10.10.10.33
+
+  db_clientes_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.10.48/28
+          gateway: 10.10.10.49
+
+  db_inventario_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.10.64/28
+          gateway: 10.10.10.65
+
+  db_relatorios_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.10.80/28
+          gateway: 10.10.10.81
+
+  db_backup_clientes_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.10.96/28
+          gateway: 10.10.10.97
+
+  db_backup_inventario_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.10.112/28
+          gateway: 10.10.10.113
+
+  db_backup_relatorios_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.10.128/28
+          gateway: 10.10.10.129
+
+  proxy_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.10.144/28
+          gateway: 10.10.10.145
+
+volumes:
+  db_clientes_data:
+  db_inventario_data:
+  db_relatorios_data:
+  db_backup_clientes_data:
+  db_backup_inventario_data:
+  db_backup_relatorios_data:
