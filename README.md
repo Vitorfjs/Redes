@@ -32,4 +32,3 @@ Este repositório orquestra três micro‑serviços REST independentes, cada um 
    ```bash
    git clone https://github.com/Vitorfjs/Redes
    ```
-2. 
